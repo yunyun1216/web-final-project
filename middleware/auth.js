@@ -19,9 +19,9 @@ module.exports = function (req, res, next) {
 };
 
 function handleUnauthorized(req, res) {
-  // Check if browser navigation request (expects HTML) or direct address bar hit
+  // Check if browser navigation request (expects HTML) or direct address bar hit (GET request)
   const acceptHeader = req.headers.accept || '';
-  if (acceptHeader.includes('text/html')) {
+  if (req.method === 'GET' || acceptHeader.includes('text/html')) {
     res.status(401).send(`
       <!DOCTYPE html>
       <html>
