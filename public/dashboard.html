@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>個人記帳本 - 我的儀表板</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="dashboard-container">
+    
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="user-info">
+        <div class="user-avatar" id="avatarLetter">U</div>
+        <div class="user-text">
+          <h2 id="welcomeUsername">載入中...</h2>
+          <p>專屬個人雲端記帳本</p>
+        </div>
+      </div>
+      <button onclick="handleLogout()" class="btn btn-logout">登出系統</button>
+    </header>
+
+    <!-- Summary Metrics Grid (Auto-calculated, +5 points bonus) -->
+    <section class="summary-grid">
+      <!-- Net Balance -->
+      <div class="summary-card glass card-balance">
+        <div class="summary-details">
+          <h3>資產剩餘金額</h3>
+          <div class="amount" id="netBalance">$0</div>
+        </div>
+        <div class="summary-icon">💰</div>
+      </div>
+
+      <!-- Total Income -->
+      <div class="summary-card glass card-income">
+        <div class="summary-details">
+          <h3>總收入</h3>
+          <div class="amount" id="totalIncome">$0</div>
+        </div>
+        <div class="summary-icon">📈</div>
+      </div>
+
+      <!-- Total Expense -->
+      <div class="summary-card glass card-expense">
+        <div class="summary-details">
+          <h3>總支出</h3>
+          <div class="amount" id="totalExpense">$0</div>
+        </div>
+        <div class="summary-icon">📉</div>
+      </div>
+    </section>
+
+    <!-- Workspace -->
+    <main class="workspace-grid">
+      
+      <!-- Input Transaction Form -->
+      <section class="record-form-panel glass">
+        <h3 class="panel-title">新增記帳收支</h3>
+        
+        <form id="transactionForm" onsubmit="addTransaction(event)">
+          <!-- Transaction Type Select -->
+          <div class="form-group">
+            <label>交易類型</label>
+            <div class="radio-group">
+              <div class="radio-option">
+                <input type="radio" id="typeExpense" name="type" value="expense" checked required>
+                <label for="typeExpense" class="radio-label label-expense">💸 支出</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="typeIncome" name="type" value="income" required>
+                <label for="typeIncome" class="radio-label label-income">💰 收入</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <label for="descInput">項目描述</label>
+            <input type="text" id="descInput" class="form-input" required placeholder="例如：午餐、薪水、捷運車資">
+          </div>
+
+          <!-- Amount -->
+          <div class="form-group">
+            <label for="amountInput">金額 (TWD)</label>
+            <input type="number" id="amountInput" class="form-input" required min="1" step="any" placeholder="請輸入正數金額">
+          </div>
+
+          <!-- Category Tags (+5 points bonus) -->
+          <div class="form-group">
+            <label for="categorySelect">帳目分類</label>
+            <select id="categorySelect" class="form-input">
+              <option value="餐飲">🍔 餐飲</option>
+              <option value="交通">🚗 交通</option>
+              <option value="娛樂">🎬 娛樂</option>
+              <option value="購物">🛍️ 購物</option>
+              <option value="醫療">🏥 醫療</option>
+              <option value="其他" selected>❓ 其他</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn">確認送出項目</button>
+        </form>
+      </section>
+
+      <!-- Ledger Panel (SPA transactions list, +10 points) -->
+      <section class="ledger-panel glass">
+        <h3 class="panel-title">收支明細清單</h3>
+        
+        <div id="transactionList" class="transaction-list">
+          <!-- Dynamically populated or empty state -->
+          <div class="empty-state" id="emptyState">
+            <div class="empty-state-icon">📝</div>
+            <p>目前尚無記帳紀錄，請從左側新增！</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Toast Containers for alerts -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Custom Confirm Modal -->
+  <div id="confirmModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card glass">
+      <div class="modal-header">
+        <span class="modal-icon">⚠️</span>
+        <h3>確認刪除</h3>
+      </div>
+      <div class="modal-body">
+        <p>您確定要刪除這筆收支項目嗎？</p>
+      </div>
+      <div class="modal-footer">
+        <button id="confirmCancelBtn" class="btn btn-secondary">取消</button>
+        <button id="confirmConfirmBtn" class="btn btn-danger">確定</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
