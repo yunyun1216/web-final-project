@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
@@ -23,18 +22,10 @@ app.use(cookieParser());
 // Serve static frontend assets
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Root route handler with authentication redirection
+// Root route: always serve index.html (SPA)
+// The frontend JS decides which view to show based on session state.
 app.get('/', (req, res) => {
-  const token = req.cookies.token;
-  if (!token) {
-    return res.redirect('/login.html');
-  }
-  try {
-    jwt.verify(token, process.env.JWT_SECRET || 'localdevsecretkey12345');
-    res.redirect('/dashboard.html');
-  } catch (err) {
-    res.redirect('/login.html');
-  }
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Register API Routes

@@ -53,7 +53,7 @@ router.post('/', async (req, res) => {
 // @desc    Delete a transaction (verifying owner for isolation)
 router.delete('/:id', async (req, res) => {
   try {
-    const account = await Account.findById(req.id || req.params.id);
+    const account = await Account.findById(req.params.id);
 
     if (!account) {
       return res.status(404).json({ error: '找不到該筆記帳資料！' });

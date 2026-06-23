@@ -19,9 +19,14 @@ module.exports = function (req, res, next) {
 };
 
 function handleUnauthorized(req, res) {
-  // Check if browser navigation request (expects HTML) or direct address bar hit (GET request)
+  // API routes always return JSON 401
+  if (req.path.startsWith('/api/') || req.originalUrl.startsWith('/api/')) {
+    return res.status(401).json({ error: '未授權，請先登入！' });
+  }
+
+  // Direct browser navigation to a non-API URL: show alert then redirect
   const acceptHeader = req.headers.accept || '';
-  if (req.method === 'GET' || acceptHeader.includes('text/html')) {
+  if (acceptHeader.includes('text/html')) {
     res.status(401).send(`
       <!DOCTYPE html>
       <html>
@@ -32,7 +37,7 @@ function handleUnauthorized(req, res) {
       <body>
         <script>
           alert("請先登入！");
-          window.location.href = "/login.html";
+          window.location.href = "/";
         </script>
       </body>
       </html>
